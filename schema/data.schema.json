@@ -1,0 +1,300 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Telon-Y/Dinning/blob/main/schema/data.schema.json",
+  "title": "Dinning data.json",
+  "description": "食谱 + 买菜 + 库存的唯一数据文件格式。手机与电脑复用同一份 schema。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "settings",
+    "foods",
+    "recipes",
+    "meals",
+    "inventoryBatches",
+    "purchases",
+    "cookLogs",
+    "stockLedger"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "updatedAt": { "type": "string" },
+    "settings": { "$ref": "#/definitions/settings" },
+    "foods": { "type": "array", "items": { "$ref": "#/definitions/food" } },
+    "recipes": { "type": "array", "items": { "$ref": "#/definitions/recipe" } },
+    "meals": { "type": "array", "items": { "$ref": "#/definitions/meal" } },
+    "inventoryBatches": { "type": "array", "items": { "$ref": "#/definitions/inventoryBatch" } },
+    "purchases": { "type": "array", "items": { "$ref": "#/definitions/purchase" } },
+    "cookLogs": { "type": "array", "items": { "$ref": "#/definitions/cookLog" } },
+    "stockLedger": { "type": "array", "items": { "$ref": "#/definitions/ledgerEntry" } },
+    "deletions": { "type": "array", "items": { "$ref": "#/definitions/deletion" } }
+  },
+  "definitions": {
+    "pence": { "type": "integer", "minimum": 0 },
+    "unit": {
+      "type": "string",
+      "enum": ["g", "kg", "ml", "l", "个", "包", "盒", "袋", "块", "把", "勺", "unknown"]
+    },
+    "baseUnit": { "type": "string", "enum": ["g", "ml", "个"] },
+    "location": { "type": "string", "enum": ["fridge", "freezer", "pantry", "counter"] },
+    "area": { "type": "string", "enum": ["meat", "fish", "veg", "fruit", "staple", "dairy", "seasoning", "other"] },
+    "dateType": { "type": "string", "enum": ["use_by", "best_before", "unknown"] },
+    "idString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "day": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "timestamp": { "type": "string", "minLength": 1 },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["household", "budget", "stores"],
+      "properties": {
+        "household": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["defaultServings"],
+          "properties": { "defaultServings": { "type": "integer", "minimum": 1, "maximum": 4 } }
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weeklyPence", "weekStartsOn", "timezone"],
+          "properties": {
+            "weeklyPence": { "$ref": "#/definitions/pence" },
+            "weekStartsOn": {
+              "type": "string",
+              "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+            },
+            "timezone": { "type": "string", "minLength": 1 }
+          }
+        },
+        "stores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name", "role"],
+            "properties": {
+              "id": { "$ref": "#/definitions/idString" },
+              "name": { "type": "string", "minLength": 1 },
+              "role": { "type": "string", "enum": ["main", "topup"] }
+            }
+          }
+        }
+      }
+    },
+    "food": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "baseUnit"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^food_[A-Za-z0-9_-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "baseUnit": { "$ref": "#/definitions/baseUnit" },
+        "area": { "$ref": "#/definitions/area" },
+        "unitConversions": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "packSizes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["size", "unit"],
+            "properties": {
+              "size": { "type": "number", "exclusiveMinimum": 0 },
+              "unit": { "$ref": "#/definitions/unit" },
+              "label": { "type": "string" },
+              "pricePence": { "type": ["integer", "null"], "minimum": 0 }
+            }
+          }
+        },
+        "shelfLifeDays": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fridge": { "type": "integer", "minimum": 0 },
+            "freezer": { "type": "integer", "minimum": 0 },
+            "pantry": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "storageHint": { "type": "string" },
+        "storeHint": { "type": "string" }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "baseServings", "ingredients", "status"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^recipe_[A-Za-z0-9_-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "baseServings": { "type": "integer", "minimum": 1 },
+        "ingredients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["foodId", "amount", "unit"],
+            "properties": {
+              "foodId": { "$ref": "#/definitions/idString" },
+              "amount": { "type": "number", "minimum": 0 },
+              "unit": { "$ref": "#/definitions/unit" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "complete"] },
+        "createdAt": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": { "type": "string" },
+            "repository": { "type": "string" },
+            "commit": { "type": "string" },
+            "license": { "type": "string" },
+            "retrievedAt": { "type": "string" }
+          }
+        }
+      }
+    },
+    "meal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "date", "slot", "state"],
+      "properties": {
+        "id": { "$ref": "#/definitions/idString" },
+        "date": { "$ref": "#/definitions/day" },
+        "slot": { "type": "string", "enum": ["dinner"] },
+        "state": {
+          "type": "string",
+          "enum": ["planned", "cooking", "done", "skipped", "eating_out", "leftovers"]
+        },
+        "recipeId": { "type": ["string", "null"] },
+        "actualServings": { "type": ["integer", "null"], "minimum": 1 },
+        "servingsConfirmed": { "type": "boolean" },
+        "note": { "type": "string" }
+      }
+    },
+    "inventoryBatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "foodId", "location", "quantityState", "dateType"],
+      "properties": {
+        "id": { "$ref": "#/definitions/idString" },
+        "foodId": { "$ref": "#/definitions/idString" },
+        "location": { "$ref": "#/definitions/location" },
+        "quantityState": { "type": "string", "enum": ["exact", "level"] },
+        "quantity": { "type": "number", "minimum": 0 },
+        "unit": { "$ref": "#/definitions/unit" },
+        "level": { "type": "string", "enum": ["none", "little", "half", "enough", "unknown"] },
+        "dateType": { "$ref": "#/definitions/dateType" },
+        "date": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "opened": { "type": "boolean" },
+        "dateSource": { "type": "string", "enum": ["package", "estimate", "none"] },
+        "addedAt": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "unitCostPence": { "type": ["number", "null"], "minimum": 0 },
+        "sourcePurchaseId": { "type": ["string", "null"] },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "quantityState": { "const": "exact" } }, "required": ["quantityState"] },
+          "then": { "required": ["quantity", "unit"] }
+        },
+        {
+          "if": { "properties": { "quantityState": { "const": "level" } }, "required": ["quantityState"] },
+          "then": { "required": ["level"] }
+        }
+      ]
+    },
+    "purchase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "foodId", "purchasedAt", "quantity", "unit", "status", "stocked"],
+      "properties": {
+        "id": { "$ref": "#/definitions/idString" },
+        "foodId": { "$ref": "#/definitions/idString" },
+        "purchasedAt": { "$ref": "#/definitions/timestamp" },
+        "quantity": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "$ref": "#/definitions/unit" },
+        "amountPence": { "type": ["integer", "null"], "minimum": 0 },
+        "storeId": { "type": ["string", "null"] },
+        "timing": { "type": "string", "enum": ["main", "topup"] },
+        "status": { "type": "string", "enum": ["complete", "pending", "partial"] },
+        "stocked": { "type": "boolean" },
+        "sourceKey": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "cookLog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "mealId", "cookedAt", "actualServings", "consumed"],
+      "properties": {
+        "id": { "$ref": "#/definitions/idString" },
+        "mealId": { "$ref": "#/definitions/idString" },
+        "cookedAt": { "$ref": "#/definitions/timestamp" },
+        "actualServings": { "type": "integer", "minimum": 1 },
+        "recipeId": { "type": ["string", "null"] },
+        "recipeName": { "type": ["string", "null"] },
+        "consumed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["foodId", "quantity", "unit"],
+            "properties": {
+              "foodId": { "$ref": "#/definitions/idString" },
+              "quantity": { "type": "number", "minimum": 0 },
+              "unit": { "$ref": "#/definitions/unit" },
+              "batchId": { "type": ["string", "null"] },
+              "shortfall": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "sourceKey": { "type": "string" },
+        "undoneBy": { "type": ["string", "null"] }
+      }
+    },
+    "ledgerEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "at", "type", "foodId", "quantity", "unit", "sourceKey"],
+      "properties": {
+        "id": { "$ref": "#/definitions/idString" },
+        "at": { "$ref": "#/definitions/timestamp" },
+        "type": { "type": "string", "enum": ["purchase_in", "cook_out", "manual_adjust", "undo"] },
+        "foodId": { "$ref": "#/definitions/idString" },
+        "batchId": { "type": ["string", "null"] },
+        "quantity": { "type": "number" },
+        "unit": { "$ref": "#/definitions/unit" },
+        "sourceKey": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "deletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity", "id", "deletedAt"],
+      "properties": {
+        "entity": {
+          "type": "string",
+          "enum": ["foods", "recipes", "meals", "inventoryBatches", "purchases", "cookLogs"]
+        },
+        "id": { "$ref": "#/definitions/idString" },
+        "deletedAt": { "$ref": "#/definitions/timestamp" }
+      }
+    }
+  }
+}

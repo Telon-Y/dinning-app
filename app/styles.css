@@ -1,0 +1,349 @@
+:root {
+  --bg: #eef7fe;
+  --card: #ffffff;
+  --ink: #0f2440;
+  --muted: #5b7590;
+  --line: #d5e8f8;
+  --accent: #084ccf;
+  --accent-soft: #e6effd; /* 主色浅底：选中态、待办标签 */
+  --accent-deep: #0639a3; /* 主色深一档：顶栏渐变、强调 */
+  --green: #2f6b4f;
+  --red: #b3261e;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(15, 36, 64, .05), 0 6px 20px rgba(15, 36, 64, .07);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  padding-bottom: calc(min(20vw, 84px) + 16px);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(160deg, #1f63e6, var(--accent-deep));
+  color: #fff;
+  padding: 14px 16px;
+}
+.topbar-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.topbar h1 { margin: 0; font-size: 18px; letter-spacing: .5px; }
+.build { margin-left: 8px; font-size: 11px; font-weight: 400; opacity: .72; letter-spacing: 0; }
+.badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.18); }
+.badge.good { background: #cfe9d8; color: #1d4a33; }
+.badge.warn { background: #ffe6c7; color: #8a4b04; }
+.badge.bad { background: #ffd9d6; color: #8c1d16; }
+
+.view { max-width: 720px; margin: 0 auto; padding: 16px 14px 24px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h2 { margin: 0 0 10px; font-size: 16px; color: var(--accent); }
+
+.row { display: flex; align-items: center; gap: 10px; }
+.row.between { justify-content: space-between; }
+.row.end { justify-content: flex-end; }
+.muted { color: var(--muted); font-size: 13px; }
+.warn { color: var(--accent); }
+.over-text { color: var(--red); }
+.done { color: var(--green); }
+
+button { font: inherit; cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 9px 16px; font-size: 14px; }
+button.secondary { background: #fff; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 9px 16px; font-size: 14px; }
+button.mini { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); }
+button.mini.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.mini.danger-mini { color: var(--red); border-color: #f0c7c3; }
+button.danger { background: #fff; color: var(--red); border: 1px solid #f0c7c3; border-radius: 999px; padding: 9px 16px; font-size: 14px; margin-right: auto; }
+.fridge-item { cursor: pointer; }
+.log-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px dashed #e7f0f9; }
+.log-item:last-child { border-bottom: none; }
+.log-msg { font-size: 14px; }
+.exp-expired { color: var(--red); font-weight: 600; }
+.exp-soon { color: var(--accent); font-weight: 600; }
+.conflict-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px dashed #e7f0f9; }
+.conflict-item:last-child { border-bottom: none; }
+.ing-row { display: flex; gap: 8px; align-items: center; padding: 7px 0; border-bottom: 1px dashed #e7f0f9; }
+.ing-row:last-child { border-bottom: none; }
+.store-row { display: flex; gap: 8px; align-items: center; padding: 7px 0; border-bottom: 1px dashed #e7f0f9; }
+.store-row:last-child { border-bottom: none; }
+.store-row .ing-name { flex: 1; font-size: 14px; }
+.store-row select { width: 8.5em; padding: 6px 8px; }
+.ing-row .ing-name { flex: 1; font-size: 14px; min-width: 0; }
+.ing-row input[type="number"], .ing-row input[type="text"] { width: 5.5em; padding: 6px 8px; }
+.ing-row input.unit-input { width: 4em; }
+.ing-row select.unit-input { width: 4.6em; flex: 0 0 auto; padding: 6px 8px; }
+.ing-row input[type="number"] { width: 4.6em; }
+.ing-row select { flex: 1; }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 2px; }
+.chips::-webkit-scrollbar { display: none; }
+.pick-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0 10px; }
+.pick-list:empty { display: none; }
+.pick { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; text-align: left; font-size: 13.5px; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
+.pick.active { border-color: var(--accent); background: var(--accent-soft); }
+.pick .muted { font-size: 11.5px; }
+.chip { flex: 0 0 auto; font-size: 12.5px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); }
+.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.chip .muted { color: inherit; opacity: .68; font-size: 11px; }
+/* 日志可能很长，固定高度内部滚动，别把整页撑开 */
+.log-list { max-height: min(46vh, 320px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+.bar { height: 8px; background: #dfebf7; border-radius: 999px; overflow: hidden; margin: 6px 0 8px; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, #2f6b4f, #4f9a72); }
+/* 预算条：已付那一段用琥珀色，还要买的那段绿色，超支整条变红（over 放最后，优先级最高） */
+.bar i.paid { background: linear-gradient(90deg, #084ccf, #e0a05a); }
+.bar i.estimate { background: linear-gradient(90deg, #2f6b4f, #4f9a72); }
+.bar i.over { background: linear-gradient(90deg, #b3261e, #e05a4a); }
+.legend { display: flex; gap: 14px; font-size: 12.5px; margin: 0 0 4px; }
+.legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+.legend .dot.paid { background: #d0703a; }
+.legend .dot.estimate { background: #3f8663; }
+.legend .dot.ok { background: var(--green); }
+.legend .dot.soon { background: #d98324; }
+.legend .dot.expired { background: var(--red); }
+.legend .dot.unknown { background: #c9d9e9; }
+
+/* 食材按新鲜度上色：左边一条色带，扫一眼就知道先吃哪个 */
+.fridge-item { border-left: 3px solid transparent; padding-left: 9px; }
+.fridge-item.fresh-ok { border-left-color: var(--green); }
+.fridge-item.fresh-soon { border-left-color: #d98324; background: #fffaf2; }
+.fridge-item.fresh-expired { border-left-color: var(--red); background: #fff6f5; }
+.fridge-item.fresh-unknown { border-left-color: #dbe8f4; }
+
+/* 一行单选（采购点 / 位置 / 日期类型）：点一下就是选中，不用先展开下拉 */
+.radio-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
+.radio-row .chip { cursor: pointer; }
+.field { display: block; margin: 10px 0 2px; }
+.field-label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+
+/* 冰箱库存的分组头：点一下折叠/展开 */
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  margin: 10px 0 2px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: #eef7fe;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.group-head .muted { font-weight: 400; }
+.over-line { color: var(--red); font-size: 13px; font-weight: 600; margin: 4px 0 0; }
+.budget-row { justify-content: space-between; font-size: 13.5px; }
+
+.days { display: flex; flex-direction: column; gap: 10px; }
+.day-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px 14px; }
+.day-card.today { border-color: var(--accent); }
+.day-head { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.day-name { font-weight: 600; color: var(--accent); }
+.today-tag { background: var(--accent-soft); color: var(--accent); font-size: 11.5px; padding: 1px 8px; border-radius: 999px; }
+.day-body { margin: 4px 0 8px; font-size: 15px; }
+.day-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* 本周拖动/对调：日期栏右边那个「⠿ 换」既是拖动把手，也是点选对调的入口 */
+.day-head-right { margin-left: auto; display: flex; align-items: center; }
+.drag-grip {
+  font: inherit;
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  touch-action: none; /* 这一小块不参与滚动，手指按住就能拖 */
+  cursor: grab;
+}
+.drag-grip:active { cursor: grabbing; background: var(--accent-soft); }
+.lock-note { font-size: 11px; padding: 3px 8px; }
+.day-card.draggable .day-head { cursor: grab; }
+.day-card.locked { background: #fbfdff; }
+.day-card.dragging { opacity: .45; }
+.day-card.drop-target { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent-soft); }
+.day-card.swap-armed { border-style: dashed; border-color: var(--accent); }
+.day-card.swap-source { border-color: var(--accent); background: var(--accent-soft); }
+.swap-row { margin: 0 0 8px; }
+.swap-banner { border-color: var(--accent); background: var(--accent-soft); }
+.swap-banner h2 { color: var(--accent); }
+.drag-hint { margin: 10px 4px 0; }
+.drag-ghost {
+  position: fixed;
+  z-index: 80;
+  transform: translate(-50%, -50%);
+  max-width: 70vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(15, 36, 64, .3);
+  pointer-events: none; /* 不然 elementFromPoint 只会拿到它自己 */
+}
+body.dragging-day { user-select: none; -webkit-user-select: none; }
+
+.tag { display: inline-block; font-size: 11.5px; padding: 2px 9px; border-radius: 999px; background: #eaf2fa; color: #5b7590; margin-right: 6px; }
+.tag.draft { background: #e6effd; color: var(--accent); }
+.tag.off { background: transparent; color: #93a9c0; box-shadow: inset 0 0 0 1px #d5e8f8; }
+/* 点一下就能补的动作标签（比如库存里的「待补价」） */
+button.tag { border: none; font: inherit; font-size: 11.5px; cursor: pointer; }
+.tag.todo { background: #e6effd; color: var(--accent); box-shadow: inset 0 0 0 1px #c9dcfb; }
+.tag.star { background: #fff6d8; color: #8a6d1a; box-shadow: inset 0 0 0 1px #f0e0b0; }
+/* 可点的菜名：点一下进「食材勾选」那一页 */
+.link { color: var(--accent); border-bottom: 1px dashed currentColor; cursor: pointer; }
+
+/* 份数滑块：手指能按得准，也不弹输入法 */
+.slider-field { margin: 12px 0 6px; }
+.slider-field b { color: var(--accent); }
+.slider-field input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 30px;
+  margin: 4px 0 0;
+  background: transparent;
+}
+.slider-field input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.slider-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+.slider-field input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.slider-field input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+}
+.slider-ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+.tags { margin-top: 6px; }
+
+.list-heading { font-size: 13px; color: var(--accent); letter-spacing: .5px; margin: 14px 0 6px; font-weight: 600; }
+.plain-list { list-style: none; margin: 0; padding: 0; }
+.shop-item, .fridge-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px dashed #e7f0f9; }
+.shop-item:last-child, .fridge-item:last-child { border-bottom: none; }
+.shop-main { flex: 1; min-width: 0; }
+.shop-name { font-size: 15px; }
+.shop-sub { font-size: 12.5px; }
+.shop-item.bought .shop-name { color: #93a9c0; text-decoration: line-through; }
+
+input[type="checkbox"] { width: 20px; height: 20px; margin: 4px 0 0; accent-color: var(--accent); }
+
+.stepper { display: flex; gap: 6px; }
+
+label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+label.checkline { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; }
+input, select, textarea { font: inherit; font-size: 14px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; width: 100%; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.status-row { font-size: 14px; margin-bottom: 10px; }
+
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: #fff;
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab {
+  height: min(20vw, 84px);
+  border: none;
+  border-right: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.tab:last-child { border-right: none; }
+.tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+
+.modal-backdrop { position: fixed; inset: 0; background: rgba(43,39,36,.45); display: flex; align-items: flex-end; justify-content: center; z-index: 40; }
+.modal { background: #fff; width: 100%; max-width: 560px; border-radius: 16px 16px 0 0; padding: 18px 18px calc(18px + env(safe-area-inset-bottom)); max-height: 88vh; overflow: auto; }
+.modal h3 { margin: 0 0 12px; font-size: 16px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.modal-body { font-size: 14px; }
+.modal-body ul { padding-left: 18px; }
+
+.toast { position: fixed; left: 50%; bottom: 92px; transform: translateX(-50%); background: rgba(43,39,36,.92); color: #fff; font-size: 13.5px; padding: 9px 16px; border-radius: 999px; z-index: 60; }
+
+/* 「吃的日历」：7 列 = 一周（列序跟着设置里的周起点走） */
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 4px 0 10px; }
+.cal-head b { font-size: 14px; white-space: nowrap; }
+.cal-head .mini { font-size: 11.5px; padding: 4px 9px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow { text-align: center; font-size: 11px; color: var(--muted); padding-bottom: 2px; }
+.cal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-height: 42px;
+  padding: 3px 1px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  overflow: hidden;
+}
+.cal-cell .cal-num { font-size: 11.5px; line-height: 1.2; }
+.cal-cell .cal-name { font-size: 9.5px; line-height: 1.2; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+.cal-cell.out-month { opacity: .38; }
+.cal-cell.cal-cooked { background: #eaf7f0; border-color: #bfe0cd; }
+.cal-cell.cal-cooked .cal-name { color: var(--green); }
+.cal-cell.cal-eating_out, .cal-cell.cal-skipped, .cal-cell.cal-leftovers { background: #fffaf2; border-color: #f0dcbb; }
+.cal-cell.cal-missed { background: #fff6f5; border-color: #f0c7c3; }
+.cal-cell.cal-missed .cal-name { color: var(--red); }
+.cal-cell.cal-planned { background: var(--accent-soft); border-color: #c9dcfb; }
+.cal-cell.today { box-shadow: inset 0 0 0 2px var(--accent); }
+.cal-cell.selected { border-color: var(--accent); border-width: 2px; }
+.cal-week { margin-top: 2px; }
+.cal-week-row { display: flex; gap: 10px; align-items: baseline; padding: 6px 4px; border-bottom: 1px dashed #e7f0f9; cursor: pointer; font-size: 13.5px; }
+.cal-week-row:last-child { border-bottom: none; }
+.cal-week-row.selected { background: var(--accent-soft); border-radius: 8px; }
+.cal-week-day { flex: 0 0 5.6em; color: var(--muted); font-size: 12.5px; }
+.cal-week-what { flex: 1; min-width: 0; }
+
+@media (min-width: 620px) {
+  .modal-backdrop { align-items: center; }
+  .modal { border-radius: 16px; }
+}
